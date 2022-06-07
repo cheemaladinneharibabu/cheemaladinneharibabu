@@ -1,0 +1,104 @@
+create database OnlineHotelManagementSystem;
+use OnlineHotelManagementSystem;
+
+create table Guest
+(
+MemberCode int not null identity(100,1) primary key,
+Name nvarchar(100) not null,
+Age int not null,
+MobileNumber nvarchar(50) not null unique,
+Gender nvarchar(100) not null,
+City nvarchar(50) not null,
+Pincode nvarchar(50) not null,
+Citizenship nvarchar(50) not null,
+Occupation nvarchar(50) not null,
+DrivingLicence nvarchar(50) not null,
+Email nvarchar(50) not null unique
+);
+
+create table Room
+(
+RoomId int identity(1,1) primary key,
+RoomName nvarchar(50) not null,
+BuildingNumber int not null,
+FloorNumber int not null,
+Status nvarchar(50) not null,
+RoomType nvarchar(50) references TypeOfRoom(RoomType)
+);
+
+create table TypeOfRoom
+(
+RoomType nvarchar(50) primary key,
+Adults int not null,
+Child int not null,
+StandardPrice int not null
+);
+
+create table MakeReservation
+(
+ReservationCode int identity(1,1) primary key,
+RoomId int foreign key references Room(RoomId),
+MemberCode int foreign key references Guest(MemberCode),
+CheckInTime datetime not null,
+CheckOutTime datetime not null,
+NoOfNights int not null,
+RoomPrice int not null
+);
+
+create table ServicesBill
+(
+BillNo int identity(1,1) primary key,
+Date datetime not null,
+Price int not null,
+Tax int not null,
+Units int not null,
+ItemName nvarchar(50) not null,
+MemberCode int foreign key references Guest(MemberCode),
+ReservationCode int foreign key references MakeReservation(ReservationCode),
+Amount int not null
+);
+
+create table Invoice
+(
+InvoiceId int not null identity(1000,1) primary key,
+MemberCode int foreign key references Guest(MemberCode),
+RoomPrice int not null,
+ServicesCost int not null,
+Total int not null
+);
+
+create table PaymentDetails
+(
+PaymentId int not null identity(1,1) primary key,
+PaymentTime datetime not null,
+PaymentMethod nvarchar(50) not null,
+MemberCode int foreign key references Guest(MemberCode),
+InvoiceId int foreign key references Invoice(InvoiceId),
+Total int not null
+);
+
+create table Staff
+(
+UserId int not null identity(100,1) primary key,
+Name nvarchar(50) not null,
+MobileNumber varchar(50) not null unique,
+Email nvarchar(55) not null unique,
+Gender nvarchar(55) not null,
+Salary int ,
+NIC int ,
+Address nvarchar(50) ,
+Password nvarchar(55) not null,
+Role nvarchar(55) not null
+);
+			
+
+
+create table Inventory
+(
+InventoryId int identity(1,1) primary key,
+InventoryName nvarchar(50) not null,
+Quantity int not null,
+UnitPrice int not null
+);
+
+
